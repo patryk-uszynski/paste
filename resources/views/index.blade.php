@@ -11,11 +11,13 @@
 				<input type="text" class="form-control input-sm" name="author" v-model="author" placeholder="Your name">
 			</div>
 
-			<div class="form-group">
+			<!-- <div class="form-group">
 				<textarea class="form-control input-sm" name="text" v-model="text" placeholder="Paste text..."></textarea>
-			</div>
+			</div> -->
 
-			<div class="form-group text-right">   
+			<vue-editor v-model="content"></vue-editor>
+
+			<div class="form-group text-right mt-4">   
 				<button type="submit" class="btn btn-primary btn-lg">Submit</button>
 			</div>
 		</form>
@@ -30,55 +32,6 @@
 
 @section('scripts')	
 	<script>
-		new Vue({ 
-			el: '#guestbook',
-			data: {
-				pastes: [],
-				text: '',
-				author: ''
-			},
-			created: function() {
-				this.getMessages();
-			},
-			methods: {
-				getMessages: function() {
-					$.ajax({
-						context: this,
-						url: "/api/paste",
-						success: function (result) {
-							this.pastes = result;
-						}
-					})
-				},
-				onCreate: function(e) {
-					e.preventDefault();
-					$.ajax({
-						context: this,
-						type: "POST",
-						data: {
-							author: this.author,
-							text: this.text
-						},
-						url: "/api/paste",
-						success: function(result) {
-							this.pastes.push(result);
-							this.author = ''
-							this.text = ''
-						}
-					})                        
-				},
-				onDelete: function (paste) {
-					$.ajax({
-						context: paste,
-						type: "DELETE",
-						url: "/api/paste/" + paste.id,
-					})
 
-					this.pastes = this.pastes.filter(function (item) {
-						return paste.id != item.id;
-					});
-				}
-			}
-		})
 	</script>
 @endsection
